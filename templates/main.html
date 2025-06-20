@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+     <head>
+          <meta charset="UTF-8" />
+          <meta
+               name="viewport"
+               content="width=device-width, initial-scale=1.0"
+          />
+          <title>MindSweeper Kitties!</title>
+          <link
+               rel="stylesheet"
+               href="{{ url_for('static', filename='style.css') }}"
+          />
+     </head>
+     <body>
+          <div class="content-wrapper">
+               <h1>MindSweeper Kitties</h1>
+               <p class="main-menu-p">Select your difficulty level:</p>
+
+               <form action="{{ url_for('start_game') }}" method="post">
+                    <div class="difficulty-options">
+                         {% for level, data in difficulties.items() %}
+                         <div
+                              class="difficulty-card"
+                              data-difficulty="{{ level }}"
+                         >
+                              <h3>{{ level|capitalize }}</h3>
+                              <div class="stats">
+                                   Grid: {{ data.grid }}<br />
+                                   Dogs: {{ data.mines }}<br />
+                                   Initial Confidence:<br />
+                                   {{ data.confidence }}%
+                              </div>
+                              <span class="radio-custom"></span>
+                              <input
+                                   type="radio"
+                                   name="difficulty"
+                                   value="{{ level }}"
+                                   id="{{ level }}-radio"
+                                   {%
+                                   if
+                                   loop.first
+                                   %}checked{%
+                                   endif
+                                   %}
+                              />
+                         </div>
+                         {% endfor %}
+                    </div>
+
+                    <button type="submit" class="start-game-btn">
+                         Start Game
+                    </button>
+               </form>
+
+               <div class="about-box">
+                    <div class="about-title">
+                         About<br />Confidence<br />Levels
+                    </div>
+                    <div class="about-text">
+                         At the start of the game, each unrevealed tile has a
+                         baseline confidence level, which estimates its chance
+                         of being a mine:<br />
+                         <strong
+                              >Confidence (initial) = Total number of mines /
+                              Total number of tiles</strong
+                         ><br />
+                         Example (Easy): 10 mines / 81 tiles ≈ 12.35% mine
+                         chance per tile
+                    </div>
+               </div>
+          </div>
+
+          <script src="{{ url_for('static', filename='script.js') }}"></script>
+     </body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+     <head>
+          <meta charset="UTF-8" />
+          <meta
+               name="viewport"
+               content="width=device-width, initial-scale=1.0"
+          />
+          <title>MindSweeper Kitties!</title>
+          <link
+               rel="stylesheet"
+               href="{{ url_for('static', filename='style.css') }}"
+          />
+     </head>
+     <body>
+          <audio
+               id="loss-sound"
+               src="{{ url_for('static', filename='sounds/lose.mp3') }}"
+               preload="auto"
+          ></audio>
+
+          <audio
+               id="win-sound"
+               src="{{ url_for('static', filename='sounds/win.mp3') }}"
+               preload="auto"
+          ></audio>
+
+          <audio
+               id="background-music"
+               src="{{ url_for('static', filename='sounds/bg-music.mp3') }}"
+               preload="auto"
+               loop
+          ></audio>
+
+          <div id="game-over-modal" class="modal-overlay hidden">
+               <div class="modal-content">
+                    <button id="close-modal-btn" class="close-modal-btn">
+                         &times;
+                    </button>
+                    <h2 id="modal-winner-text">You Win!</h2>
+                    <p id="modal-subtitle" class="modal-subtitle"></p>
+                    <p id="modal-final-score"></p>
+                    <button id="play-again-btn" class="start-game-btn">
+                         Play Again
+                    </button>
+               </div>
+          </div>
+
+          <div
+               class="content-wrapper game-page"
+               data-game-id="{{ game_id }}"
+               data-difficulty="{{ difficulty }}"
+          >
+               <button id="mute-btn" class="mute-btn">🔊</button>
+
+               <h1>MindSweeper - {{ difficulty|capitalize }} Mode</h1>
+
+               <div class="game-info-bar">
+                    Human: <span id="human-score">0</span>
+                    <span class="separator">|</span>
+                    AI: <span id="ai-score">0</span>
+                    <span class="separator">|</span>
+                    Dogs Left: <span id="mines-left">0</span>
+                    <span class="separator">|</span>
+                    Time: <span id="timer">00:00</span>
+               </div>
+
+               <div id="ai-status" class="ai-status-text">It's your turn.</div>
+
+               <div class="game-container" id="game-container"></div>
+
+               <div class="controls-and-instructions">
+                    <div class="debug-controls">
+                         <label>
+                              <input type="checkbox" id="show-confidence" />
+                              Show AI Confidence
+                         </label>
+                    </div>
+                    <div class="instructions">
+                         <h3>Scoring Rules:</h3>
+                         <ul>
+                              <li>
+                                   <b>+10 points</b> for correctly flagging a
+                                   dog.
+                              </li>
+                              <li>
+                                   <b>+2 point</b> for revealing any safe tile.
+                              </li>
+                              <li><b>-20 points</b> for revealing a dog.</li>
+                              <li>
+                                   Incorrectly flagging a safe tile gives
+                                   <b>-4 points</b>.
+                              </li>
+                              <li>
+                                   If both the players choose the same tile
+                                   <b>equally shared</b>.
+                              </li>
+                              <li>Highest score wins!</li>
+                         </ul>
+                    </div>
+               </div>
+
+               <form action="{{ url_for('game_setup') }}" method="get">
+                    <button type="submit" class="start-game-btn">
+                         Return to Main Menu
+                    </button>
+               </form>
+          </div>
+          
+          <!-- Initial confidence values passed from server -->
+          <script>
+               window.initialConfidence = {{ initial_confidence | tojson | safe }};
+          </script>
+
+          <script src="{{ url_for('static', filename='script.js') }}"></script>
+     </body>
+</html>
